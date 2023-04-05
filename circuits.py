@@ -148,3 +148,37 @@ class ALU_32bit(object):
 
 
     '''
+
+class mainCtrol(circuit):
+    def __init__(self, op5, op4, op3, op2, op1, op0):
+        return
+    
+    
+class registerFile(circuit):
+    def __init__ (self, reg_initial_value):
+        return
+    
+    def setRegValue(self, o_regDecoder, valueToSet):
+        return
+    
+    def getRegValue(self, o_regDecoder):
+        return
+    
+    def getAllRegValues(self):
+        return
+    
+
+class decoderReg(circuit):
+    def __init__(self, Instr_RegField):
+        return
+    
+    def getCircuitOutput(self):
+        return
+    
+
+class simpleMIPS(circuit):
+    def __init__(self, registers):
+        return
+
+    def getCircuitOutput(self, instru):
+        return   

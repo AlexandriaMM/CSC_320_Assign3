@@ -221,10 +221,10 @@ for instru in test_instruction_sequence:
 
     simpleMIPSCPU.getCircuitOutput(instru)
 
-    print "After excute instruciton: ", instru
+    print("After excute instruction: ", instru)
     registers_values = reg_file.getAllRegValues()
     for i in range(0, len(registers_values)):
-        print "Register ", i, ": ", registers_values[i]
-    print " "
+        print ("Register ", i, ": ", registers_values[i])
+    print(" ")
 
 
