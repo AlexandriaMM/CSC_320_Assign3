@@ -128,12 +128,13 @@ class ALU_1bit(object):
 
     def getCircuitOutput(self):
         fulladder0 = fulladder(self.in0_, self.in1_, self.carryin_)
+        carryout0 = fulladder0.getCircuitOutput() 
         and0 = andgate(self.in0_, self.in1_)
         nor0 = norgate(self.in0_, self.in1_)
         xor0 = xorgate(self.in0_, self.in1_)
-        mux0 = mux_4to1(fulladder0, and0, nor0, xor0, self.m0_, self.m1_)
+        mux0 = mux_4to1(fulladder0.getCircuitOutput, and0.getCircuitOutput, nor0.getCircuitOutput, xor0.getCircuitOutput, self.m0_, self.m1_)
         
-        return mux0.getCircuitOutput
+        return mux0.getCircuitOutput, carryout0[1]
 
 
 
