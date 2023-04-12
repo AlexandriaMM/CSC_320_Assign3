@@ -211,20 +211,24 @@ test_instruction_sequence = [
 [0, 0, 0, 0, 0, 0,    0, 0, 0, 1, 0,      0, 1, 0, 1, 0,     0, 0, 0, 1, 0,     0, 0, 0, 0, 0,     1, 0, 1, 0, 1, 0],     #slt $2, $3, $10
 ]
 
-reg_initial_value = [0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 1, 0]
+# reg_initial_value = [0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 1, 0]
 
-reg_file = circuits.registerFile(reg_initial_value)
+# reg_file = circuits.registerFile(reg_initial_value)
 
-simpleMIPSCPU = circuits.simpleMIPS(reg_file)
+# simpleMIPSCPU = circuits.simpleMIPS(reg_file)
 
-for instru in test_instruction_sequence:
+# for instru in test_instruction_sequence:
 
-    simpleMIPSCPU.getCircuitOutput(instru)
+#     simpleMIPSCPU.getCircuitOutput(instru)
 
-    print("After excute instruction: ", instru)
-    registers_values = reg_file.getAllRegValues()
-    for i in range(0, len(registers_values)):
-        print ("Register ", i, ": ", registers_values[i])
-    print(" ")
+#     print("After excute instruction: ", instru)
+#     registers_values = reg_file.getAllRegValues()
+#     for i in range(0, len(registers_values)):
+#         print ("Register ", i, ": ", registers_values[i])
+#     print(" ")
+
+
+mux = circuits.mux_2to1(1,1,1)
+print(mux.getCircuitOutput())
 
 

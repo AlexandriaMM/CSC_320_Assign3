@@ -58,6 +58,14 @@ class xorgate(circuit):  # created xor gate for adder
             return 0
         else:
             return 1
+        
+class norgate(circuit): 
+    def getCircuitOutput(self):
+        if (self.in0_ == 0 and self.in1_ == 0):
+            return 1
+        else:
+            return 0
+
 
 # 2to1 mux implemented by notgate, andgates and orgates
 class mux_2to1(circuit):
@@ -111,18 +119,22 @@ class fulladder(circuit):  # takes in two bits and a carry-in, outputs a sum and
 
 # 1 bit ALU implemented with logic gates
 class ALU_1bit(object):
-    def __init__(self, in0, in1, c_in):
-        self.in0_ = in0
-        self.in1_ = in1
-        self.c_in_ = c_in
+    def __init__(self, in0, in1, carryin, m0, m1): #takes 2 inputs, a carryin, and 2 inputs for the multiplexor
+        self.in0_ = in0 #first input signal
+        self.in1_ = in1 #second input signal
+        self.carryin_ = carryin #carryin
+        self.m0_ = m0 #multiplexor input1
+        self.m1_ = m1 #multiplexor input2
 
     def getCircuitOutput(self):
-        adder = fulladder(self.in0_, self.in1_, self.c_in_)
+        fulladder0 = fulladder(self.in0_, self.in1_, self.carryin_)
         and0 = andgate(self.in0_, self.in1_)
-        #nor0 = norgate(self.in0_, self.in1_)
+        nor0 = norgate(self.in0_, self.in1_)
         xor0 = xorgate(self.in0_, self.in1_)
+        mux0 = mux_4to1(fulladder0, and0, nor0, xor0, self.m0_, self.m1_)
+        
+        return mux0.getCircuitOutput
 
-        mux0 = mux_4to1(adder.getCircuitOutput(), and0.getCircuitOutput(), nor0.getCircuitOutput(), xor0.getCircuitOutput())
 
 
 
