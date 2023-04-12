@@ -139,6 +139,27 @@ class ALU_1bit(object):
 
 
 class aluControl(circuit):
+    def __init__(self, in0, in1, in2, in3, in4, in5, aluOp0, aluOp1):
+        self.in0_ = in0
+        self.in1_ = in1
+        self.in2_ = in2
+        self.in3_ = in3
+        self.in4_ = in4
+        self.in5_ = in5
+        self.aluOp0_ = aluOp0
+        self.aluOp1_ = aluOp1
+
+    def getCircuitOutput(self):
+        f0_or_f3 = orgate(self.in0_, self.in3_) # or gate between F0 and F3
+        f1_and_alu1 = andgate(self.in1_, self.aluOp1_) # and gate between F1 and ALUOp1
+
+        operation0 = andgate(f0_or_f3, self.aluOp1_) # and gate between f0_or_f3 gate and ALUOp1, return me
+        operation1 = orgate(notgate(self.in2_), notgate(self.aluOp1_))  # or gate between not F2 and not ALUOp1, return me
+        operation2 = orgate(f1_and_alu1, self.aluOp0_) # or gate on f1_and_alu1 gate and ALUOp0, return me
+        operation3 = andgate(self.aluOp0_, notgate(self.aluOp0_)) # or gate on ALUOp0 and not ALUOp1, return me
+
+        return operation0, operation1, operation2, operation3
+
     '''
     Implement the ALU control circuit shown in Figure D.2.2 on page 7 of the slides 10_ALU_Control.pdf.
     There are eight inputs: aluOp1, aluOp2, f5, f4, f3, f2, f1, f0.
