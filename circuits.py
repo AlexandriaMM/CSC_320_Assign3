@@ -156,7 +156,7 @@ class aluControl(circuit):
         operation0 = andgate(f0_or_f3, self.aluOp1_) # and gate between f0_or_f3 gate and ALUOp1, return me
         operation1 = orgate(notgate(self.in2_), notgate(self.aluOp1_))  # or gate between not F2 and not ALUOp1, return me
         operation2 = orgate(f1_and_alu1, self.aluOp0_) # or gate on f1_and_alu1 gate and ALUOp0, return me
-        operation3 = andgate(self.aluOp0_, notgate(self.aluOp0_)) # or gate on ALUOp0 and not ALUOp1, return me
+        operation3 = andgate(self.aluOp0_, notgate(self.aluOp0_)) # or gate on ALUOp0 and not ALUOp0, return me
 
         return operation0, operation1, operation2, operation3
 
