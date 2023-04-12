@@ -111,9 +111,19 @@ class fulladder(circuit):  # takes in two bits and a carry-in, outputs a sum and
 
 # 1 bit ALU implemented with logic gates
 class ALU_1bit(object):
-    '''
-    Implement the 1 bit ALU
-    '''
+    def __init__(self, in0, in1, c_in):
+        self.in0_ = in0
+        self.in1_ = in1
+        self.c_in_ = c_in
+
+    def getCircuitOutput(self):
+        adder = fulladder(self.in0_, self.in1_, self.c_in_)
+        and0 = andgate(self.in0_, self.in1_)
+        #nor0 = norgate(self.in0_, self.in1_)
+        xor0 = xorgate(self.in0_, self.in1_)
+
+        mux0 = mux_4to1(adder.getCircuitOutput(), and0.getCircuitOutput(), nor0.getCircuitOutput(), xor0.getCircuitOutput())
+
 
 
 class aluControl(circuit):
