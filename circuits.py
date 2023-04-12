@@ -150,19 +150,19 @@ class aluControl(circuit):
         self.aluOp1_ = aluOp1
 
     def getCircuitOutput(self):
-        f0_or_f3 = orgate(self.in0_, self.in3_) # or gate between F0 and F3
-        f1_and_alu1 = andgate(self.in1_, self.aluOp1_) # and gate between F1 and ALUOp1
+        in0_or_in3 = orgate(self.in0_, self.in3_) # or gate between in0 and in3
+        in1_and_alu1 = andgate(self.in1_, self.aluOp1_) # and gate between in1 and ALUOp1
 
-        operation0 = andgate(f0_or_f3, self.aluOp1_) # and gate between f0_or_f3 gate and ALUOp1, return me
-        operation1 = orgate(notgate(self.in2_), notgate(self.aluOp1_))  # or gate between not F2 and not ALUOp1, return me
-        operation2 = orgate(f1_and_alu1, self.aluOp0_) # or gate on f1_and_alu1 gate and ALUOp0, return me
+        operation0 = andgate(in0_or_in3, self.aluOp1_) # and gate between in0_or_in3 gate and ALUOp1, return me
+        operation1 = orgate(notgate(self.in2_), notgate(self.aluOp1_))  # or gate between not in2 and not ALUOp1, return me
+        operation2 = orgate(in1_and_alu1, self.aluOp0_) # or gate on in1_and_alu1 gate and ALUOp0, return me
         operation3 = andgate(self.aluOp0_, notgate(self.aluOp0_)) # or gate on ALUOp0 and not ALUOp0, return me
 
         return operation0, operation1, operation2, operation3
 
     '''
     Implement the ALU control circuit shown in Figure D.2.2 on page 7 of the slides 10_ALU_Control.pdf.
-    There are eight inputs: aluOp1, aluOp2, f5, f4, f3, f2, f1, f0.
+    There are eight inputs: aluOp1, aluOp2, f5, f4, f3, f2, f1, f0., 
     There are four outputs of the circuit, you may put them in a python list and return as a whole.
     '''
 
