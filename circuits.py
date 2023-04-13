@@ -177,7 +177,7 @@ class ALU_32bit(object):
         self.m1_ = m1
 
     def getCircuitOutput(self):
-        if len(self.in0_) == len(self.in1_) and len(self.in0_) == 32: #checking if two lists are equal and length and are 32 bits
+        if len(self.in0_) == len(self.in1_) and len(self.in0_) == 32: #checking if two lists are equal and length is 32 bits
             reversedIn0 = self.in0_.reverse() #reversing first list so that we are reading the digits from right to left
             reversedIn1 = self.in1_.reverse() #reversing second list so that we are reading the digits from right to left
             for i in reversedIn0: #looping through two lists from input
