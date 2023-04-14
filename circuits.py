@@ -128,12 +128,13 @@ class ALU_1bit(object):
 
     def getCircuitOutput(self):
         fulladder0 = fulladder(self.in0_, self.in1_, self.carryin_)
+        carryout0 = fulladder0.getCircuitOutput() 
         and0 = andgate(self.in0_, self.in1_)
         nor0 = norgate(self.in0_, self.in1_)
         xor0 = xorgate(self.in0_, self.in1_)
-        mux0 = mux_4to1(fulladder0, and0, nor0, xor0, self.m0_, self.m1_)
+        mux0 = mux_4to1(fulladder0.getCircuitOutput, and0.getCircuitOutput, nor0.getCircuitOutput, xor0.getCircuitOutput, self.m0_, self.m1_)
         
-        return mux0.getCircuitOutput()
+        return mux0.getCircuitOutput, carryout0[1]()
 
 
 
@@ -168,6 +169,28 @@ class aluControl(circuit):
 
 
 class ALU_32bit(object):
+    def __init__(self, in0, in1, carryin, m0, m1):
+        self.in0_ = in0
+        self.in1_ = in1
+        self.carryin_ = carryin
+        self.m0_ = m0
+        self.m1_ = m1
+
+    def getCircuitOutput(self):
+        if len(self.in0_) == len(self.in1_) and len(self.in0_) == 32: #checking if two lists are equal and length is 32 bits
+            reversedIn0 = self.in0_.reverse() #reversing first list so that we are reading the digits from right to left
+            reversedIn1 = self.in1_.reverse() #reversing second list so that we are reading the digits from right to left
+            for i in reversedIn0: #looping through two lists from input
+                in0 = reversedIn0[i] #setting 1 bit from list 1
+                in1 = reversedIn1[i] #setting 1 bit from list 2
+                oldALU = ALU_1bit(in0, in1, self.carryin_, self.m0_, self.m1_) #creating old ALU
+                carryout = oldALU.getCircuitOutput()[1] #getting carryout from old ALU
+                if i >= len(self.in0_) - 1: #if loop iteration is less than list length - 1
+                    newALU = ALU_1bit(reversedIn0[i+1], reversedIn1[i+1], carryout ,self.m0_, self.m1_) #using carryout from oldALU as carryin for newALU
+                    newCarryOut = newALU.getCircuitOutput()[1] #getting carryout from new ALU
+                    self.carryin_= newCarryOut #setting carryin for the next iteration
+                else:
+                    return oldALU.getCircuitOutput()
     '''
     Implement a 32 bit ALU by using the 1 bit ALU.
     Your 32-bit ALU should be able to compute 32-bit AND, OR, addition, subtraction, slt(set on if less than).
