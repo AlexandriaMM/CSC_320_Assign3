@@ -133,7 +133,7 @@ class ALU_1bit(object):
         xor0 = xorgate(self.in0_, self.in1_)
         mux0 = mux_4to1(fulladder0, and0, nor0, xor0, self.m0_, self.m1_)
         
-        return mux0.getCircuitOutput
+        return mux0.getCircuitOutput()
 
 
 
