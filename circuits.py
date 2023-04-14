@@ -134,7 +134,7 @@ class ALU_1bit(object):
         xor0 = xorgate(self.in0_, self.in1_)
         mux0 = mux_4to1(fulladder0.getCircuitOutput, and0.getCircuitOutput, nor0.getCircuitOutput, xor0.getCircuitOutput, self.m0_, self.m1_)
         
-        return mux0.getCircuitOutput, carryout0[1]()
+        return mux0.getCircuitOutput(), carryout0[1]
 
 
 
