@@ -37,7 +37,7 @@ class notgate(circuit):  # if input = 1, returns 0, and vice versa
 
 # Hint: you may implement some multi-input logic gates to help you build the circuit,
 # for example, below is a 3-input andgate3 boolean algebra: Y=ABC
-class andgate3(circuit): # returns 1 is all inputs are 1, else returns 0
+class andgate3(circuit): # returns 1 if all inputs are 1, else returns 0
     def __init__(self, in1, in2, in3):
         self.in1_ = in1
         self.in2_ = in2
@@ -52,6 +52,26 @@ class andgate3(circuit): # returns 1 is all inputs are 1, else returns 0
 
         return out_andg1
 
+class andgate6(circuit): # takes 6 inputs, returns 1 if all are 1, else returns 0
+    def __init__(self, in1, in2, in3, in4, in5, in6):  # Initialize variables
+        self.in1_ = in1
+        self.in2_ = in2
+        self.in3_ = in3
+        self.in4_ = in4
+        self.in5_ = in5
+        self.in6_ = in6
+
+    def getCircuitOutput(self):
+        andg0 = andgate3(self.in1_, self.in2_, self.in3_)  # Take first 3 inputs and put them through an andgate
+        out_andg0 = andg0.getCircuitOutput()
+
+        andg1 = andgate3(out_andg0, self.in4_, self.in5_) # Take previous andgate and the next two inputs into another andgate
+        out_andg1 = andg1.getCircuitOutput()
+
+        andg2 = andgate3(out_andg0, out_andg1, self.in6_)  # Finally, take the two andgates and the last input and put them through one final andgate
+        out_andg2 = andg2.getCircuitOutput()
+
+        return out_andg2
 class xorgate(circuit):  # created xor gate for adder
     def getCircuitOutput(self):  # returns 0 if both inputs = 1 or both inputs = 0, else returns 0
         if (self.in1_ == 1 and self.in2_ == 1) or (self.in1_ == 0 and self.in2_ == 0):
@@ -75,12 +95,12 @@ class mux_2to1(circuit):
         self.select_ = select  # select signal
 
     def getCircuitOutput(self):
-        not_select = notgate(self.select_)  # use notgate on select for first andgate
-        and0 = andgate(self.in0_, not_select.getCircuitOutput())  # first andgate takes not select and first input
-        and1 = andgate(self.in1_, self.select_)  # second andgate takes select and second input
-        or0 = orgate(and0.getCircuitOutput(), and1.getCircuitOutput())  # orgate takes both andgates
+        not_select = notgate(self.select_).getCircuitOutput()  # use notgate on select for first andgate
+        and0 = andgate(self.in0_, not_select).getCircuitOutput()  # first andgate takes not select and first input
+        and1 = andgate(self.in1_, self.select_).getCircuitOutput()  # second andgate takes select and second input
+        or0 = orgate(and0, and1).getCircuitOutput()  # orgate takes both andgates
 
-        return or0.getCircuitOutput()  # returns the output of the orgate
+        return or0  # returns the output of the orgate
 
 # 4to1 mux implemented by 2to1 muxes
 class mux_4to1(circuit):
@@ -93,10 +113,10 @@ class mux_4to1(circuit):
         self.select1_ = select1  # select signal
 
     def getCircuitOutput(self):
-        mux0 = mux_2to1(self.in0_, self.in1_, self.select0_)  # takes in0 and in1 into a 2to1 mux, with select0
-        mux1 = mux_2to1(self.in2_, self.in3_, self.select0_)  # takes in2 and in3 into a second 2to1 mux, with select 0
-        mux2 = mux_2to1(mux0.getCircuitOutput(), mux1.getCircuitOutput())  # gets the outputs of the first two 2to1 muxs and puts them into another 2to1, with new select
-        return mux2.getCircuitOutput()  # returns output of final 2to1 mux
+        mux0 = mux_2to1(self.in0_, self.in1_, self.select0_).getCircuitOutput()  # takes in0 and in1 into a 2to1 mux, with select0
+        mux1 = mux_2to1(self.in2_, self.in3_, self.select0_).getCircuitOutput()  # takes in2 and in3 into a second 2to1 mux, with select 0
+        mux2 = mux_2to1(mux0, mux1).getCircuitOutput()  # gets the outputs of the first two 2to1 muxs and puts them into another 2to1, with new select
+        return mux2  # returns output of final 2to1 mux
 
 
 # fulladder implemented with logic gates
@@ -107,12 +127,12 @@ class fulladder(circuit):  # takes in two bits and a carry-in, outputs a sum and
         self.in2_ = in2  # third input signal
 
     def getCircuitOutput(self):
-        xor0 = xorgate(self.in0_, self.in1_)  # puts two bits into xor
-        sum_bit = xorgate(xor0.getCircuitOutput(), self.in2_)  # puts first xor and carry-in into second xor to give sum
+        xor0 = xorgate(self.in0_, self.in1_).getCircuitOutput()  # puts two bits into xor
+        sum_bit = xorgate(xor0, self.in2_).getCircuitOutput()  # puts first xor and carry-in into second xor to give sum
 
-        and0 = andgate(xor0.getCircuitOutput(), self.in2_)  # puts first xor and second bit into andgate
-        and1 = andgate(self.in0_, self.in1_)  # puts two input bits into andgate
-        carry_out = orgate(and0.getCircuitOutput(), and1.getCircuitOutput())  # combines andgates into orgate to produce carry-out
+        and0 = andgate(xor0, self.in2_).getCircuitOutput()  # puts first xor and second bit into andgate
+        and1 = andgate(self.in0_, self.in1_).getCircuitOutput()  # puts two input bits into andgate
+        carry_out = orgate(and0, and1).getCircuitOutput()  # combines andgates into orgate to produce carry-out
 
         return sum_bit, carry_out  # returns sum and carry-out
 
@@ -151,13 +171,17 @@ class aluControl(circuit):
         self.aluOp1_ = aluOp1
 
     def getCircuitOutput(self):
-        in0_or_in3 = orgate(self.in0_, self.in3_) # or gate between in0 and in3
-        in1_and_alu1 = andgate(self.in1_, self.aluOp1_) # and gate between in1 and ALUOp1
+        in0_or_in3 = orgate(self.in0_, self.in3_).getCircuitOutput() # or gate between in0 and in3
+        in1_and_alu1 = andgate(self.in1_, self.aluOp1_).getCircuitOutput() # and gate between in1 and ALUOp1
 
-        operation0 = andgate(in0_or_in3, self.aluOp1_) # and gate between in0_or_in3 gate and ALUOp1, return me
-        operation1 = orgate(notgate(self.in2_), notgate(self.aluOp1_))  # or gate between not in2 and not ALUOp1, return me
-        operation2 = orgate(in1_and_alu1, self.aluOp0_) # or gate on in1_and_alu1 gate and ALUOp0, return me
-        operation3 = andgate(self.aluOp0_, notgate(self.aluOp0_)) # or gate on ALUOp0 and not ALUOp0, return me
+        not_in2 = notgate(self.in2_).getCircuitOutput()
+        not_aluOp1 = notgate(self.aluOp1_).getCircuitOutput()
+        not_aluOp0 = notgate(self.aluOp0_).getCircuitOutput()
+
+        operation0 = andgate(in0_or_in3, self.aluOp1_).getCircuitOutput()  # and gate between in0_or_in3 gate and ALUOp1, return me
+        operation1 = orgate(not_in2, not_aluOp1).getCircuitOutput()  # or gate between not in2 and not ALUOp1, return me
+        operation2 = orgate(in1_and_alu1, self.aluOp0_).getCircuitOutput()  # or gate on in1_and_alu1 gate and ALUOp0, return me
+        operation3 = andgate(self.aluOp0_, not_aluOp0).getCircuitOutput()  # or gate on ALUOp0 and not ALUOp0, return me
 
         return operation0, operation1, operation2, operation3
 
@@ -217,7 +241,38 @@ class ALU_32bit(object):
 
 class mainCtrol(circuit):
     def __init__(self, op5, op4, op3, op2, op1, op0):
-        return
+        self.op5 = op5
+        self.op4 = op4
+        self.op3 = op3
+        self.op2 = op2
+        self.op1 = op1
+        self.op0 = op0
+
+    def getCircuitOutput(self):
+        notOp0 = notgate(self.op0).getCircuitOutput()  # These are each of our variables put through a notgate for our future andgates
+        notOp1 = notgate(self.op1).getCircuitOutput()
+        notOp2 = notgate(self.op2).getCircuitOutput()
+        notOp3 = notgate(self.op3).getCircuitOutput()
+        notOp4 = notgate(self.op4).getCircuitOutput()
+        notOp5 = notgate(self.op5).getCircuitOutput()
+
+        # 6 input andgates from FIGURE D.2.5 from the simple processor implementation slides, going from left to right on the diagram
+        and0 = andgate6(notOp0, notOp1, notOp2, notOp3, notOp4, notOp5).getCircuitOutput()  # First 6 input andgate
+        and1 = andgate6(self.op0, self.op1, notOp2, notOp3, notOp4, self.op5).getCircuitOutput()  # Second 6 input andgate
+        and2 = andgate6(self.op0, self.op1, notOp2, self.op3, notOp4, self.op5).getCircuitOutput()  # Third 6 input andgate
+        and3 = andgate6(notOp0, notOp1, self.op2, notOp3, notOp4, notOp5).getCircuitOutput()  # Fourth 6 input andgate
+
+        # Our 9 outputs, as described in the diagram
+        regDst = and0
+        aluSrc = orgate(and1, and2).getCircuitOutput()
+        memtoReg = and1
+        regWrite = orgate(and0, and1).getCircuitOutput()
+        memRead = and1
+        branch = and3
+        aluOp1 = and0
+        aluOp0 = and3
+
+        return regDst, aluSrc, memtoReg, regWrite, memRead, branch, aluOp1, aluOp0
     
     
 class registerFile(circuit):
