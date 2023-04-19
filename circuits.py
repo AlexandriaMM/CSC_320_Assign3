@@ -287,7 +287,24 @@ class registerFile(circuit):
     
     def getAllRegValues(self):
         return
-    
+
+#takes 2 inputs and gives 4 output values    
+class DEC_2to4(circuit):
+    def _init_(self, in0, in1):
+        self.in0 = in0
+        self.in1 = in1
+
+    def getCircuitOutput(self):
+        not0 = notgate(self.in0).getCircuitOutput()
+        not1 = notgate(self.in1).getCircuitOutput()
+
+        out0 = andgate(not0, not1).getCircuitOutput()
+        out1 = andgate(self.in0, not1).getCircuitOutput()
+        out2 = andgate(self.in1, not0).getCircuitOutput()
+        out3 = andgate(self.in0, self.in1).getCircuitOutput()
+
+        return out0, out1, out2, out3
+
 class DEC_3to8(circuit):
     def __init__(self, in0, in1, in2, e):
         self.in0 = in0
