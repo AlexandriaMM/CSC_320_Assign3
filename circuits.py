@@ -288,10 +288,37 @@ class registerFile(circuit):
     def getAllRegValues(self):
         return
     
+class DEC_3to8(circuit):
+    def __init__(self, in0, in1, in2, e):
+        self.in0 = in0
+        self.in1 = in1
+        self.in2 = in2
+        self.e = e
+
+    def getCircuitOutput(self):
+        not0 = notgate(self.in0).getCircuitOutput()
+        not1 = notgate(self.in1).getCircuitOutput()
+        not2 = notgate(self.in2).getCircuitOutput()
+
+        out0 = andgate3(not0, not1, not2).getCircuitOutput()
+        out1 = andgate3(not0, not1, self.in2).getCircuitOutput()
+        out2 = andgate3(not0, self.in1, not2).getCircuitOutput()
+        out3 = andgate3(not0, self.in1, self.in2).getCircuitOutput()
+        out4 = andgate3(self.in0, not1, not2).getCircuitOutput()
+        out5 = andgate3(self.in0, not1, self.in2).getCircuitOutput()
+        out6 = andgate3(self.in0, self.in1, not2).getCircuitOutput()
+        out7 = andgate3(self.in0, self.in1, self.in2).getCircuitOutput()
+
+        return out0, out1, out2, out3, out4, out5, out6, out7
+    
 
 class decoderReg(circuit):
     def __init__(self, Instr_RegField):
-        return
+        self.in0 = Instr_RegField[0]
+        self.in1 = Instr_RegField[1]
+        self.in2 = Instr_RegField[2]
+        self.in3 = Instr_RegField[3]
+        self.in4 = Instr_RegField[4]
     
     def getCircuitOutput(self):
         return

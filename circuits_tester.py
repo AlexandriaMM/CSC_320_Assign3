@@ -221,14 +221,19 @@ test_instruction_sequence = [
 
 #     simpleMIPSCPU.getCircuitOutput(instru)
 
-#     print("After excute instruction: ", instru)
+#     print("After execute instruction: ", instru)
 #     registers_values = reg_file.getAllRegValues()
 #     for i in range(0, len(registers_values)):
 #         print ("Register ", i, ": ", registers_values[i])
 #     print(" ")
 
-
-mux = circuits.mux_2to1(1,1,1)
-print(mux.getCircuitOutput())
+print(circuits.DEC_3to8(0, 0, 0, 1).getCircuitOutput())
+print(circuits.DEC_3to8(0, 0, 1, 1).getCircuitOutput())
+print(circuits.DEC_3to8(0, 1, 0, 1).getCircuitOutput())
+print(circuits.DEC_3to8(0, 1, 1, 1).getCircuitOutput())
+print(circuits.DEC_3to8(1, 0, 0, 1).getCircuitOutput())
+print(circuits.DEC_3to8(1, 0, 1, 1).getCircuitOutput())
+print(circuits.DEC_3to8(1, 1, 0, 1).getCircuitOutput())
+print(circuits.DEC_3to8(1, 1, 1, 1).getCircuitOutput())
 
 
