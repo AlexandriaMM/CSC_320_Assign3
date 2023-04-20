@@ -317,16 +317,19 @@ class DEC_3to8(circuit):
         not1 = notgate(self.in1).getCircuitOutput()
         not2 = notgate(self.in2).getCircuitOutput()
 
-        out0 = andgate3(not0, not1, not2).getCircuitOutput()
-        out1 = andgate3(not0, not1, self.in2).getCircuitOutput()
-        out2 = andgate3(not0, self.in1, not2).getCircuitOutput()
-        out3 = andgate3(not0, self.in1, self.in2).getCircuitOutput()
-        out4 = andgate3(self.in0, not1, not2).getCircuitOutput()
-        out5 = andgate3(self.in0, not1, self.in2).getCircuitOutput()
-        out6 = andgate3(self.in0, self.in1, not2).getCircuitOutput()
-        out7 = andgate3(self.in0, self.in1, self.in2).getCircuitOutput()
+        if (self.e == 0):
+            return 0, 0, 0, 0, 0, 0, 0, 0
+        else:
+            out0 = andgate3(not0, not1, not2).getCircuitOutput()
+            out1 = andgate3(not0, not1, self.in2).getCircuitOutput()
+            out2 = andgate3(not0, self.in1, not2).getCircuitOutput()
+            out3 = andgate3(not0, self.in1, self.in2).getCircuitOutput()
+            out4 = andgate3(self.in0, not1, not2).getCircuitOutput()
+            out5 = andgate3(self.in0, not1, self.in2).getCircuitOutput()
+            out6 = andgate3(self.in0, self.in1, not2).getCircuitOutput()
+            out7 = andgate3(self.in0, self.in1, self.in2).getCircuitOutput()
 
-        return out0, out1, out2, out3, out4, out5, out6, out7
+            return out0, out1, out2, out3, out4, out5, out6, out7
     
 
 class decoderReg(circuit):
@@ -338,7 +341,57 @@ class decoderReg(circuit):
         self.in4 = Instr_RegField[4]
     
     def getCircuitOutput(self):
-        return
+        dec2to4 = DEC_2to4(self.in3, self.in4)
+        e0 = dec2to4.getCircuitOutput()[0]
+        e1 = dec2to4.getCircuitOutput()[1]
+        e2 = dec2to4.getCircuitOutput()[2]
+        e3 = dec2to4.getCircuitOutput()[3]
+
+        dec3to8_1 = DEC_3to8(self.in0, self.in1, self.in2, e0)
+        dec3to8_2 = DEC_3to8(self.in0, self.in1, self.in2, e1)
+        dec3to8_3 = DEC_3to8(self.in0, self.in1, self.in2, e2)
+        dec3to8_4 = DEC_3to8(self.in0, self.in1, self.in2, e3)
+
+        out0 = dec3to8_1.getCircuitOutput()[0]
+        out1 = dec3to8_1.getCircuitOutput()[1]
+        out2 = dec3to8_1.getCircuitOutput()[2]
+        out3 = dec3to8_1.getCircuitOutput()[3]
+        out4 = dec3to8_1.getCircuitOutput()[4]
+        out5 = dec3to8_1.getCircuitOutput()[5]
+        out6 = dec3to8_1.getCircuitOutput()[6]
+        out7 = dec3to8_1.getCircuitOutput()[7]
+
+        out8 = dec3to8_2.getCircuitOutput()[0]
+        out9 = dec3to8_2.getCircuitOutput()[1]
+        out10 = dec3to8_2.getCircuitOutput()[2]
+        out11 = dec3to8_2.getCircuitOutput()[3]
+        out12 = dec3to8_2.getCircuitOutput()[4]
+        out13 = dec3to8_2.getCircuitOutput()[5]
+        out14 = dec3to8_2.getCircuitOutput()[6]
+        out15 = dec3to8_2.getCircuitOutput()[7]
+
+        out16 = dec3to8_3.getCircuitOutput()[0]
+        out17 = dec3to8_3.getCircuitOutput()[1]
+        out18 = dec3to8_3.getCircuitOutput()[2]
+        out19 = dec3to8_3.getCircuitOutput()[3]
+        out20 = dec3to8_3.getCircuitOutput()[4]
+        out21 = dec3to8_3.getCircuitOutput()[5]
+        out22 = dec3to8_3.getCircuitOutput()[6]
+        out23 = dec3to8_3.getCircuitOutput()[7]
+
+        out24 = dec3to8_4.getCircuitOutput()[0]
+        out25 = dec3to8_4.getCircuitOutput()[1]
+        out26 = dec3to8_4.getCircuitOutput()[2]
+        out27 = dec3to8_4.getCircuitOutput()[3]
+        out28 = dec3to8_4.getCircuitOutput()[4]
+        out29 = dec3to8_4.getCircuitOutput()[5]
+        out30 = dec3to8_4.getCircuitOutput()[6]
+        out31 = dec3to8_4.getCircuitOutput()[7]
+
+        return out0, out1, out2, out3, out4, out5, out6, out7, out8, out9, out10, out11, out12, out13, out14, out15, out16, out17, out18, out19, out20, out21, out22, out23, out24, out25, out26, out27, out28, out29, out30, out31
+
+    
+
     
 
 class simpleMIPS(circuit):
