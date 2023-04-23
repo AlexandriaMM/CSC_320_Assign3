@@ -277,16 +277,20 @@ class mainCtrol(circuit):
     
 class registerFile(circuit):
     def __init__ (self, reg_initial_value):
-        return
+        self.registers = [reg_initial_value for i in range(32)]
     
     def setRegValue(self, o_regDecoder, valueToSet):
-        return
+        for i in range(32):
+            if o_regDecoder[i] == 1:
+                self.registers[i] = valueToSet
     
     def getRegValue(self, o_regDecoder):
-        return
+        for i in range(32):
+            if o_regDecoder[i] == 1:
+                return self.registers[i]
     
     def getAllRegValues(self):
-        return
+        return self.registers
 
 #takes 2 inputs and gives 4 output values    
 class DEC_2to4(circuit):

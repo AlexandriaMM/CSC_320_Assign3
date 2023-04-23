@@ -211,21 +211,23 @@ test_instruction_sequence = [
 [0, 0, 0, 0, 0, 0,    0, 0, 0, 1, 0,      0, 1, 0, 1, 0,     0, 0, 0, 1, 0,     0, 0, 0, 0, 0,     1, 0, 1, 0, 1, 0],     #slt $2, $3, $10
 ]
 
-# reg_initial_value = [0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 1, 0]
+reg_initial_value = [0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 1, 0]
 
-# reg_file = circuits.registerFile(reg_initial_value)
+reg_file = circuits.registerFile(reg_initial_value)
 
-# simpleMIPSCPU = circuits.simpleMIPS(reg_file)
+#print(reg_file.getAllRegValues())
 
-# for instru in test_instruction_sequence:
+simpleMIPSCPU = circuits.simpleMIPS(reg_file)
 
-#     simpleMIPSCPU.getCircuitOutput(instru)
+for instru in test_instruction_sequence:
 
-#     print("After execute instruction: ", instru)
-#     registers_values = reg_file.getAllRegValues()
-#     for i in range(0, len(registers_values)):
-#         print ("Register ", i, ": ", registers_values[i])
-#     print(" ")
+    simpleMIPSCPU.getCircuitOutput(instru)
+
+    print("After execute instruction: ", instru)
+    registers_values = reg_file.getAllRegValues()
+    for i in range(0, len(registers_values)):
+        print ("Register ", i, ": ", registers_values[i])
+    print(" ")
 
 print(circuits.DEC_3to8(0, 0, 0, 1).getCircuitOutput())
 print(circuits.DEC_3to8(0, 0, 1, 1).getCircuitOutput())
