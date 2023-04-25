@@ -84,6 +84,7 @@ class xorgate(circuit):
     def __init__(self, in1_, in2_):
         self.in1_ = in1_
         self.in2_ = in2_
+
     def getCircuitOutput(self):  # returns 0 if both inputs = 1 or both inputs = 0, else returns 0
         if (self.in1_ == 1 and self.in2_ == 1) or (self.in1_ == 0 and self.in2_ == 0):
             return 0
@@ -94,6 +95,7 @@ class norgate(circuit):
     def __init__(self, in1_, in2_):
         self.in1_ = in1_
         self.in2_ = in2_
+
     def getCircuitOutput(self):
         if (self.in1_ == 0 and self.in2_ == 0):
             return 1
@@ -134,36 +136,16 @@ class mux_4to1(circuit):
         self.in0_ = in0  # first input signal
         self.in1_ = in1  # second input signal
         self.in2_ = in2  # third input signal
-        #self.in3_ = in3  # fourth input signal
         self.select0_ = select0  # select signal
         self.select1_ = select1  # select signal
 
     def getCircuitOutput(self):
-        # and1 = andgate3(self.select0_, self.select1_, self.in3_)
-        # and2 = andgate3(notgate(self.select0_).getCircuitOutput(), self.select1_, self, self.in2_)
-        # and3 = andgate3(self.select0_, notgate(self.select1_).getCircuitOutput(), self, self.in1_)
-        # and4 = andgate3(notgate(self.select0_).getCircuitOutput(), notgate(self.select1_).getCircuitOutput(), self, self.in0_)
-
-        # or1 = orgate(and1, and2).getCircuitOutput()
-        # or2 = orgate(and3, and4).getCircuitOutput()
-        # or3 = orgate(or1, or2).getCircuitOutput()
-
-        # return or3
-
         if self.select0_ == 0 and self.select1_ == 0:
             return self.in0_
         elif self.select0_ == 0 and self.select1_ == 1:
             return self.in1_
         elif self.select0_ == 1 and self.select1_ == 0:
             return self.in2_
-        # elif self.select0_ == 1 and self.select1_ == 1:
-        #     return self.in3_
-
-        # mux0 = mux_2to1(self.in0_, self.in1_, self.select0_).getCircuitOutput()  # takes in0 and in1 into a 2to1 mux, with select0
-        # mux1 = mux_2to1(self.in2_, self.in3_, self.select0_).getCircuitOutput()  # takes in2 and in3 into a second 2to1 mux, with select 0
-        # mux2 = mux_2to1(mux0, mux1, self.select1_).getCircuitOutput()  # gets the outputs of the first two 2to1 muxs and puts them into another 2to1, with new select
-        # return mux2  # returns output of final 2to1 mux
-
 
 # fulladder implemented with logic gates
 class fulladder(circuit):  # takes in two bits and a carry-in, outputs a sum and a carry-out
@@ -202,10 +184,7 @@ class ALU_1bit(object):
         carryout0 = fulladder0.getCircuitOutput()
         and0 = andgate(self.in0_, self.in1_)
         or0 = orgate(self.in0_, self.in1_)
-        # slt0 = slt(self.in0_, self.in1_)
         mux0 = mux_4to1(and0.getCircuitOutput(), or0.getCircuitOutput(), fulladder0.getCircuitOutput()[0], self.m0_, self.m1_)
-
-        print(mux0.getCircuitOutput())
         
         return mux0.getCircuitOutput(), carryout0[1]
 
@@ -256,55 +235,21 @@ class ALU_32bit(object):
         self.returnVal = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     def getCircuitOutput(self):
-        #if len(self.in0_) == len(self.in1_) and len(self.in0_) == 32: #checking if two lists are equal and length is 32 bits
-            self.in0_.reverse() #reversing first list so that we are reading the digits from right to left
-            self.in1_.reverse()
-            #print(reversedIn0) #reversing second list so that we are reading the digits from right to left
-            carryin = self.aluControlOutput[1]
-            #if self.m0_ != 1 and self.m1_ != 1:
-            for i in range(32): #looping through two lists from input
-                in0 = self.in0_[i] #setting 1 bit from list 1
-                in1 = self.in1_[i] #setting 1 bit from list 2
-                if i == 0:
-                    oldALU = list(ALU_1bit(in0, in1, carryin, self.aluControlOutput).getCircuitOutput()) #creating old ALU
-                else:
-                    oldALU = list(ALU_1bit(in0, in1, carryout, self.aluControlOutput).getCircuitOutput()) #creating old ALU
-                #print(len(oldALU))
-                self.returnVal[i] = oldALU[0]
-                carryout = oldALU[1] #getting carryout from old ALU
-                # if i >= len(self.in0_) - 1: #if loop iteration is less than list length - 1
-                #     # newALU = ALU_1bit(reversedIn0[i+1], reversedIn1[i+1], carryout ,self.m0_, self.m1_) #using carryout from oldALU as carryin for newALU
-                #     newALU = ALU_1bit(self.in0_[i+1], self.in1_[i+1], carryout, self.aluControlOutput).getCircuitOutput() #using carryout from oldALU as carryin for newALU
-                #     newCarryOut = newALU.getCircuitOutput()[1] #getting carryout from new ALU
-                #     self.carryin_= newCarryOut #setting carryin for the next iteration
-                # else:
-                #     print(len(returnVal))
-                #     return returnVal.reverse()
-                #     #return oldALU.getCircuitOutput()
-            self.returnVal.reverse()
-            return self.returnVal
-            # else:
-            #     binary1 = [str(element) for element in self.in0_]
-            #     binary2 = [str(element) for element in self.in1_]
-            #     #print(self.in1_[0:])
-            #     newBinary1 = int(''.join(binary1))
-            #     newBinary2 = int(''.join(binary2))
-            #     #print(newBinary1)
-            #     #print(newBinary2)
-
-            #     decimal1, i = 0, 0
-            #     while (newBinary1 != 0):
-            #         dec1 = newBinary1 % 10
-            #         decimal1 = decimal1 + dec1 * pow(2, i)
-            #         newBinary1 = newBinary1//10
-            #         i += 1
-
-            #     print(decimal1)
-                
-            #     # if (decimal1 < decimal2):
-            #     #     return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
-            #     # else:
-            #     #     return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.in0_.reverse() #reversing first list so that we are reading the digits from right to left
+        self.in1_.reverse()
+        carryin = self.aluControlOutput[1]
+        for i in range(32): #looping through two lists from input
+            in0 = self.in0_[i] #setting 1 bit from list 1
+            in1 = self.in1_[i] #setting 1 bit from list 2
+            if i == 0:
+                oldALU = list(ALU_1bit(in0, in1, carryin, self.aluControlOutput).getCircuitOutput()) #creating old ALU
+            else:
+                oldALU = list(ALU_1bit(in0, in1, carryout, self.aluControlOutput).getCircuitOutput()) #creating old ALU
+            self.returnVal[i] = oldALU[0]
+            carryout = oldALU[1] #getting carryout from old ALU
+        self.returnVal.reverse()
+        return self.returnVal
+    
     '''
     Implement a 32 bit ALU by using the 1 bit ALU.
     Your 32-bit ALU should be able to compute 32-bit AND, OR, addition, subtraction, slt(set on if less than).
@@ -450,55 +395,6 @@ class decoderReg(circuit):
         list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         list[31 - decimal] = 1
         return list
-        # print(list[0:])
-        # dec2to4 = DEC_2to4(self.in3, self.in4)
-        # e0 = dec2to4.getCircuitOutput()[0]
-        # e1 = dec2to4.getCircuitOutput()[1]
-        # e2 = dec2to4.getCircuitOutput()[2]
-        # e3 = dec2to4.getCircuitOutput()[3]
-
-        # dec3to8_1 = DEC_3to8(self.in0, self.in1, self.in2, e0)
-        # dec3to8_2 = DEC_3to8(self.in0, self.in1, self.in2, e1)
-        # dec3to8_3 = DEC_3to8(self.in0, self.in1, self.in2, e2)
-        # dec3to8_4 = DEC_3to8(self.in0, self.in1, self.in2, e3)
-
-        # out0 = dec3to8_1.getCircuitOutput()[0]
-        # out1 = dec3to8_1.getCircuitOutput()[1]
-        # out2 = dec3to8_1.getCircuitOutput()[2]
-        # out3 = dec3to8_1.getCircuitOutput()[3]
-        # out4 = dec3to8_1.getCircuitOutput()[4]
-        # out5 = dec3to8_1.getCircuitOutput()[5]
-        # out6 = dec3to8_1.getCircuitOutput()[6]
-        # out7 = dec3to8_1.getCircuitOutput()[7]
-
-        # out8 = dec3to8_2.getCircuitOutput()[0]
-        # out9 = dec3to8_2.getCircuitOutput()[1]
-        # out10 = dec3to8_2.getCircuitOutput()[2]
-        # out11 = dec3to8_2.getCircuitOutput()[3]
-        # out12 = dec3to8_2.getCircuitOutput()[4]
-        # out13 = dec3to8_2.getCircuitOutput()[5]
-        # out14 = dec3to8_2.getCircuitOutput()[6]
-        # out15 = dec3to8_2.getCircuitOutput()[7]
-
-        # out16 = dec3to8_3.getCircuitOutput()[0]
-        # out17 = dec3to8_3.getCircuitOutput()[1]
-        # out18 = dec3to8_3.getCircuitOutput()[2]
-        # out19 = dec3to8_3.getCircuitOutput()[3]
-        # out20 = dec3to8_3.getCircuitOutput()[4]
-        # out21 = dec3to8_3.getCircuitOutput()[5]
-        # out22 = dec3to8_3.getCircuitOutput()[6]
-        # out23 = dec3to8_3.getCircuitOutput()[7]
-
-        # out24 = dec3to8_4.getCircuitOutput()[0]
-        # out25 = dec3to8_4.getCircuitOutput()[1]
-        # out26 = dec3to8_4.getCircuitOutput()[2]
-        # out27 = dec3to8_4.getCircuitOutput()[3]
-        # out28 = dec3to8_4.getCircuitOutput()[4]
-        # out29 = dec3to8_4.getCircuitOutput()[5]
-        # out30 = dec3to8_4.getCircuitOutput()[6]
-        # out31 = dec3to8_4.getCircuitOutput()[7]
-
-        # return out0, out1, out2, out3, out4, out5, out6, out7, out8, out9, out10, out11, out12, out13, out14, out15, out16, out17, out18, out19, out20, out21, out22, out23, out24, out25, out26, out27, out28, out29, out30, out31
 
 class simpleMIPS(circuit):
     def __init__(self, registers):
