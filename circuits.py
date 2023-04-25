@@ -1,4 +1,4 @@
-__author__ = ""
+__author__ = "Joshua Buxton, Jim Collado, Alexandria Macko-Millard, Zach Paul"
 __Copyright__ = "Copyright @2022"
 
 
@@ -410,16 +410,8 @@ class simpleMIPS(circuit):
         funct = self.instru[26:]
         funct.reverse()
 
-        RegDst = mainCtrol(*opcode).getCircuitOutput()[0]
-        Branch = mainCtrol(*opcode).getCircuitOutput()[6]
-        MemRead = mainCtrol(*opcode).getCircuitOutput()[4]
-        MemtoReg = mainCtrol(*opcode).getCircuitOutput()[2]
         ALUOp1 = mainCtrol(*opcode).getCircuitOutput()[7]
         ALUOp0 = mainCtrol(*opcode).getCircuitOutput()[8]
-        MemWrite = mainCtrol(*opcode).getCircuitOutput()[5]
-        ALUSrc = mainCtrol(*opcode).getCircuitOutput()[1]
-        RegWrite = mainCtrol(*opcode).getCircuitOutput()[3]
-
 
         register1 = decoderReg(rs).getCircuitOutput()
         reg1Val = self.registers.getRegValue(register1)

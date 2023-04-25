@@ -1,4 +1,4 @@
-__author__ = "Your names"
+__author__ = "Joshua Buxton, Zach Paul, Alexandria Macko-Millard, Jim Collado"
 __Copyright__ =  "Copyright @2022"
 
 
@@ -215,10 +215,6 @@ reg_initial_value = [0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 
 
 reg_file = circuits.registerFile(reg_initial_value)
 
-# print(circuits.ALU_1bit(1, 1, 0, 1, 1, 0).getCircuitOutput())
-
-#print(reg_file.getAllRegValues())
-
 simpleMIPSCPU = circuits.simpleMIPS(reg_file)
 
 for instru in test_instruction_sequence:
@@ -230,14 +226,5 @@ for instru in test_instruction_sequence:
     for i in range(0, len(registers_values)):
         print ("Register ", i, ": ", registers_values[i])
     print(" ")
-
-print(circuits.DEC_3to8(0, 0, 0, 1).getCircuitOutput())
-print(circuits.DEC_3to8(0, 0, 1, 1).getCircuitOutput())
-print(circuits.DEC_3to8(0, 1, 0, 1).getCircuitOutput())
-print(circuits.DEC_3to8(0, 1, 1, 1).getCircuitOutput())
-print(circuits.DEC_3to8(1, 0, 0, 1).getCircuitOutput())
-print(circuits.DEC_3to8(1, 0, 1, 1).getCircuitOutput())
-print(circuits.DEC_3to8(1, 1, 0, 1).getCircuitOutput())
-print(circuits.DEC_3to8(1, 1, 1, 1).getCircuitOutput())
 
 
