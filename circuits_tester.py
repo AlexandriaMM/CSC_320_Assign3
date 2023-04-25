@@ -215,6 +215,8 @@ reg_initial_value = [0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 
 
 reg_file = circuits.registerFile(reg_initial_value)
 
+# print(circuits.ALU_1bit(1, 1, 0, 1, 1, 0).getCircuitOutput())
+
 #print(reg_file.getAllRegValues())
 
 simpleMIPSCPU = circuits.simpleMIPS(reg_file)
