@@ -96,7 +96,7 @@ class norgate(circuit):
         self.in1_ = in1_
         self.in2_ = in2_
 
-    def getCircuitOutput(self):
+    def getCircuitOutput(self): #returns 1 only if both inputs are 0, else returns 0
         if (self.in1_ == 0 and self.in2_ == 0):
             return 1
         else:
@@ -177,16 +177,18 @@ class ALU_1bit(object):
         self.m1_ = aluControlOutput[3] #multiplexor input2
 
     def getCircuitOutput(self):
+        #checking value of invb and setting input value of fulladder accordingly
         if self.invb == 0:
             fulladder0 = fulladder(self.in0_, self.in1_, self.carryin_)
         elif self.invb == 1:
             fulladder0 = fulladder(self.in0_, notgate(self.in1_).getCircuitOutput(), self.carryin_)
-        carryout0 = fulladder0.getCircuitOutput()
-        and0 = andgate(self.in0_, self.in1_)
-        or0 = orgate(self.in0_, self.in1_)
+        carryout0 = fulladder0.getCircuitOutput() #getting carryout from the full adder
+        and0 = andgate(self.in0_, self.in1_) #puts 2 input bits into an and gate
+        or0 = orgate(self.in0_, self.in1_) #puts 2 input bits into an or gate
+        #passing logic gate output, fulladder output, and input values into 4 to 1 mux
         mux0 = mux_4to1(and0.getCircuitOutput(), or0.getCircuitOutput(), fulladder0.getCircuitOutput()[0], self.m0_, self.m1_)
         
-        return mux0.getCircuitOutput(), carryout0[1]
+        return mux0.getCircuitOutput(), carryout0[1] #returning mux output and carryout
 
 
 
@@ -236,7 +238,7 @@ class ALU_32bit(object):
 
     def getCircuitOutput(self):
         self.in0_.reverse() #reversing first list so that we are reading the digits from right to left
-        self.in1_.reverse()
+        self.in1_.reverse() #reversing second list for same reason
         carryin = self.aluControlOutput[1]
         for i in range(32): #looping through two lists from input
             in0 = self.in0_[i] #setting 1 bit from list 1
@@ -247,7 +249,7 @@ class ALU_32bit(object):
                 oldALU = list(ALU_1bit(in0, in1, carryout, self.aluControlOutput).getCircuitOutput()) #creating old ALU
             self.returnVal[i] = oldALU[0]
             carryout = oldALU[1] #getting carryout from old ALU
-        self.returnVal.reverse()
+        self.returnVal.reverse() #reversing to correctly order the list
         return self.returnVal
     
     '''
@@ -335,13 +337,13 @@ class DEC_2to4(circuit):
         self.in1 = in1
 
     def getCircuitOutput(self):
-        not0 = notgate(self.in0).getCircuitOutput()
-        not1 = notgate(self.in1).getCircuitOutput()
+        not0 = notgate(self.in0).getCircuitOutput() #not first input value
+        not1 = notgate(self.in1).getCircuitOutput() #not second input value
 
-        out0 = andgate(not0, not1).getCircuitOutput()
-        out1 = andgate(self.in0, not1).getCircuitOutput()
-        out2 = andgate(self.in1, not0).getCircuitOutput()
-        out3 = andgate(self.in0, self.in1).getCircuitOutput()
+        out0 = andgate(not0, not1).getCircuitOutput() #first output created from not of 2 inputs
+        out1 = andgate(self.in0, not1).getCircuitOutput() #second output created from first input, not second input
+        out2 = andgate(self.in1, not0).getCircuitOutput() #third output created from first input, not first input
+        out3 = andgate(self.in0, self.in1).getCircuitOutput() #fourth output created from first input and second input
 
         return out0, out1, out2, out3
 
@@ -353,13 +355,14 @@ class DEC_3to8(circuit):
         self.e = e
 
     def getCircuitOutput(self):
-        not0 = notgate(self.in0).getCircuitOutput()
-        not1 = notgate(self.in1).getCircuitOutput()
-        not2 = notgate(self.in2).getCircuitOutput()
+        not0 = notgate(self.in0).getCircuitOutput() #not first input
+        not1 = notgate(self.in1).getCircuitOutput() #not second input
+        not2 = notgate(self.in2).getCircuitOutput() #not third input
 
         if (self.e == 0):
             return 0, 0, 0, 0, 0, 0, 0, 0
         else:
+            #passing input values into 3 input and-gates to get output
             out0 = andgate3(not0, not1, not2).getCircuitOutput()
             out1 = andgate3(not0, not1, self.in2).getCircuitOutput()
             out2 = andgate3(not0, self.in1, not2).getCircuitOutput()
@@ -374,6 +377,7 @@ class DEC_3to8(circuit):
 
 class decoderReg(circuit):
     def __init__(self, Instr_RegField):
+        #passing in 5 bit input to represent register number and instruction value
         self.in0 = Instr_RegField[0]
         self.in1 = Instr_RegField[1]
         self.in2 = Instr_RegField[2]
