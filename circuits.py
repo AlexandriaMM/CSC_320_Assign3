@@ -377,7 +377,7 @@ class DEC_3to8(circuit):
 
 class decoderReg(circuit):
     def __init__(self, Instr_RegField):
-        #passing in 5 bit input to represent register number and instruction value
+        #passing in 5 bit input to represent register number and instruction string
         self.in0 = Instr_RegField[0]
         self.in1 = Instr_RegField[1]
         self.in2 = Instr_RegField[2]
@@ -405,28 +405,29 @@ class simpleMIPS(circuit):
         self.registers = registers
 
     def getCircuitOutput(self, instru):
+        #breaking instruction string into individual substrings
         self.instru = instru
-        opcode = self.instru[0:6]
-        rs = self.instru[6:11]
-        rt = self.instru[11:16]
-        rd = self.instru[16:21]
-        shamt = self.instru[21:26]
-        funct = self.instru[26:]
+        opcode = self.instru[0:6] #setting opcode from first 6 bits
+        rs = self.instru[6:11] #setting rs from second 5 bits
+        rt = self.instru[11:16] #setting rt from third 5 bits
+        rd = self.instru[16:21] #setting rd from fourth 5 bits
+        shamt = self.instru[21:26] #setting shift amount from fifth 5 bits
+        funct = self.instru[26:] #setting function from last 6 bits
         funct.reverse()
 
-        ALUOp1 = mainCtrol(*opcode).getCircuitOutput()[7]
-        ALUOp0 = mainCtrol(*opcode).getCircuitOutput()[8]
+        ALUOp1 = mainCtrol(*opcode).getCircuitOutput()[7] #getting first alu output from maincontrol
+        ALUOp0 = mainCtrol(*opcode).getCircuitOutput()[8] #getting second alu output from maincontrol
 
-        register1 = decoderReg(rs).getCircuitOutput()
-        reg1Val = self.registers.getRegValue(register1)
-        register2 = decoderReg(rt).getCircuitOutput()
-        reg2Val = self.registers.getRegValue(register2)
+        register1 = decoderReg(rs).getCircuitOutput() #decoding register value 1
+        reg1Val = self.registers.getRegValue(register1) #setting register value 1 to 32 bit decoded binary string
+        register2 = decoderReg(rt).getCircuitOutput() #decoding register value 2
+        reg2Val = self.registers.getRegValue(register2) #setting register value 2 to 32 bit decoded binary string
 
-        writeRegister = decoderReg(rd).getCircuitOutput()
+        writeRegister = decoderReg(rd).getCircuitOutput() #getting output for register
 
-        aluControlOutput = list(aluControl(*funct, ALUOp0, ALUOp1).getCircuitOutput())
+        aluControlOutput = list(aluControl(*funct, ALUOp0, ALUOp1).getCircuitOutput()) #getting alu output
 
-        aluControlOutput.reverse()
+        aluControlOutput.reverse() #reversing output to put in right order
 
         if (aluControlOutput != [0, 1, 1, 1]):
             new = ALU_32bit(reg1Val, reg2Val, aluControlOutput).getCircuitOutput()
