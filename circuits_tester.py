@@ -2,7 +2,7 @@ __author__ = "Joshua Buxton, Zach Paul, Alexandria Macko-Millard, Jim Collado"
 __Copyright__ =  "Copyright @2022"
 
 
-import circuits
+import circuitscopy
 
 
 '''
@@ -213,9 +213,9 @@ test_instruction_sequence = [
 
 reg_initial_value = [0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 1, 0]
 
-reg_file = circuits.registerFile(reg_initial_value)
+reg_file = circuitscopy.registerFile(reg_initial_value)
 
-simpleMIPSCPU = circuits.simpleMIPS(reg_file)
+simpleMIPSCPU = circuitscopy.simpleMIPS(reg_file)
 
 for instru in test_instruction_sequence:
 
